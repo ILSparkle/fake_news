@@ -6,6 +6,7 @@ import logging
 import argparse
 from datetime import datetime
 import os
+from src.metrics import MetricsCalculator
 
 load_dotenv()
 from torch.utils.data import DataLoader
@@ -151,10 +152,18 @@ async def main():
     results_dir = Path("results")
     results_dir.mkdir(exist_ok=True)
     
+    metrics_calculator = MetricsCalculator()
+    
     for batch_idx, batch in enumerate(dataloader):
         batch_results = []
-        batch_correct = 0
-        batch_total = 0
+        batch_metrics = {
+            'true_positive': 0,
+            'true_negative': 0,
+            'false_positive': 0,
+            'false_negative': 0,
+            'total': 0,
+            'correct': 0
+        }
         
         # 准备批次数据
         batch_data = [
@@ -187,25 +196,35 @@ async def main():
         for result in results:
             if result is not None:
                 batch_results.append(result)
-                batch_total += 1
-                if result['is_correct']:
-                    batch_correct += 1
+                result_metrics = metrics_calculator.update_metrics(result)
+                for key in batch_metrics:
+                    batch_metrics[key] += result_metrics[key]
 
-        # 计算并输出批次准确率
-        batch_accuracy = batch_correct / batch_total if batch_total > 0 else 0
-        logging.info(f"批次 {batch_idx} 处理完成 - 准确率: {batch_accuracy:.2%} ({batch_correct}/{batch_total})")
+        # 计算批次指标
+        batch_stats = metrics_calculator.calculate_metrics(batch_metrics)
+        
+        logging.info(
+            f"批次 {batch_idx} 处理完成:\n"
+            f"准确率: {batch_stats['accuracy']:.2%} "
+            f"({batch_metrics['correct']}/{batch_metrics['total']})\n"
+            f"精确率: {batch_stats['precision']:.2%}\n"
+            f"召回率: {batch_stats['recall']:.2%}\n"
+            f"F1分数: {batch_stats['f1']:.2%}"
+        )
 
         # 保存批次结果
         with open(results_dir / f"batch_{batch_idx}.json", 'w', encoding='utf-8') as f:
             json.dump({
                 'results': batch_results,
                 'statistics': {
-                    'total': batch_total,
-                    'correct': batch_correct,
-                    'accuracy': batch_accuracy
+                    'metrics': batch_metrics,
+                    **batch_stats
                 }
             }, f, ensure_ascii=False, indent=2)
-        break
+            
+        if batch_idx == 4:
+            metrics_calculator.save_results(results_dir)
+            break
 
 if __name__ == "__main__":
     asyncio.run(main())
