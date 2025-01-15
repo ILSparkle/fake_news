@@ -1,0 +1,79 @@
+2025-01-15 12:21:59 - root - INFO - 日志文件已创建: logs/log_20250115_122159.txt
+2025-01-15 12:21:59 - root - INFO - 开始加载数据集
+2025-01-15 12:22:57 - root - INFO - 数据集大小: 16599
+2025-01-15 12:22:57 - root - INFO - 新闻标题: Rihanna gives a flash of cleavage at NYFW show
+2025-01-15 12:22:57 - root - INFO - 已加载代理: 192.168.44.1:7890
+2025-01-15 12:22:59 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:22:59 - root - INFO - 提取的关键词: Heidi Montag Lauren Conrad The Hills Friendship Feud
+2025-01-15 12:23:01 - root - INFO - 找到 9 条相关新闻
+2025-01-15 12:23:16 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:16 - root - INFO - 真实性判断结果: 1. 新闻内容的一致性：目标新闻提到Heidi Montag澄清了她与Lauren Conrad之间最近的误解，并声称自己一直以来都是一个很好的朋友。而相关新闻中多个来源，包括The Things、People、Page Six等，都证实了Heidi Montag和Lauren Conrad的关系在过去曾出现过分歧，也有报道提到Heidi最近重提这一矛盾，并澄清与Lauren之间的一些事情。
+
+2. 事实验证：相关新闻提供了关于Heidi Montag和Lauren Conrad的关系以及过去争端的细节，这与目标新闻描述的情况一致，且进一步支持了Heidi想澄清她与Lauren之间误解的事实。例如，Page Six和Reality Tea的报道都证实了Heidi最近谈话的内容，也提及她对公众的声明。
+
+3. 用户反馈：在所涉及的内容中，用户评论主要集中在The Hills这个节目及其角色之间的关系，并没有提供直接的评论来质疑或支持特定新闻的真实性，因此对于新闻真实性的直接影响有限。
+
+4. 可信度评估：目标新闻的说法得到了多个独立且可靠的娱乐新闻平台的报道支持，如People、Page Six和The Things，这些来源通常被认为是相对可信的。因此，基于新闻来源的可靠性，目标新闻的可信度较高。
+
+综合考虑这些因素，我认为新闻中的关键事实得到了多个来源的支持，且新闻内容的一致性和可信度较高。因此，我的判断是："真实"。
+2025-01-15 12:23:16 - root - INFO - 处理完成新闻 gossipcop-872840
+2025-01-15 12:23:16 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:16 - root - INFO - 提取的关键词: Taylor Swift Sugarland Babe music video
+2025-01-15 12:23:18 - root - INFO - 找到 9 条相关新闻
+2025-01-15 12:23:37 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:37 - root - INFO - 真实性判断结果: 目标新闻中的事件主要涉及到泰勒·斯威夫特与Sugarland乐队合作的歌曲《Babe》的音乐视频发布。以下是对提供的信息进行分析后的判断：
+
+1. **新闻内容的一致性**：
+   - 目标新闻描述了泰勒·斯威夫特参与了Sugarland的《Babe》歌曲视频，这是一个类似《广告狂人》风格的复古戏剧。信息的主题包括纳什维尔的2018年CMT颁奖典礼上的预告露出，以及6月9日完整版视频的发布日期。
+   - 在相关新闻中，来自wikipedia、Elle和YouTube的视频和描述验证了这些信息，说明《Babe》是由泰勒·斯威夫特合作的，且视频有明显的复古风格，一致性较强。
+
+2. **事实验证**：
+   - Wikipedia和Elle的内容都证实了《Babe》视频作为一个以1960年代为背景的戏剧，由泰勒·斯威夫特和Sugarland合作，并在2018年CMT颁奖上进行首次预告。
+   - YouTube的相关视频链接和内容也符合这一描述，尤其是Sugarland feat. Taylor Swift - Babe (Official Trailer)验证了预告片的发布。
+
+3. **用户反馈**：
+   - 未发现用户直接对这则新闻的评论，但Reddit上有关于《Babe》的讨论，表明公众对这首歌版本的不同期望，这虽然不直接证实新闻内容，但表示了公众对该合作的关注。
+
+4. **可信度评估**：
+   - 新闻来源如wikipedia、Elle和相关YouTube视频均为公开可访问且通常内容较可靠的平台，并且相关新闻的一致性较高。
+
+综合以上分析，目标新闻中的关键信息在多个可靠来源中得到了验证，没有显见的不一致或虚假信息。因此可以认为该新闻是真实的。
+
+真实
+2025-01-15 12:23:37 - root - INFO - 处理完成新闻 gossipcop-942205
+2025-01-15 12:23:37 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:37 - root - INFO - 提取的关键词: Jessica Alba Baby2Baby Holiday Party L.A.'s Finest Spectrum
+2025-01-15 12:23:39 - root - INFO - 找到 9 条相关新闻
+2025-01-15 12:23:53 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:53 - root - INFO - 真实性判断结果: 真实
+
+理由：
+
+1. 新闻内容的一致性：目标新闻与相关新闻内容一致，涉及到的事件和人物都能在其他相关新闻中找到相应的描述。
+
+2. 事实验证：相关新闻如Daily Mail和Hola等都报道了Jessica Alba和丈夫Cash Warren带着孩子参加Baby2Baby Holiday Party的消息。Instagram上的内容也支持这一事实。
+
+3. 用户反馈：评论中提到的是与目标新闻不相关的内容，没有影响目标新闻的真实性。
+
+4. 可信度评估：新闻来源包括Daily Mail、Hola等知名媒体平台，以及Jessica Alba的Instagram，这增加了新闻的可信度。
+
+综合上述分析，目标新闻是真实的。
+2025-01-15 12:23:53 - root - INFO - 处理完成新闻 gossipcop-903479
+2025-01-15 12:23:54 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:23:54 - root - INFO - 提取的关键词: Robert Buckley Jenny Wade Marriage Thailand Instagram
+2025-01-15 12:23:56 - root - INFO - 找到 9 条相关新闻
+2025-01-15 12:24:16 - httpx - INFO - HTTP Request: POST https://ai-yyds.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-01-15 12:24:16 - root - INFO - 真实性判断结果: 真实
+
+理由如下：
+
+1. 新闻内容的一致性：目标新闻与相关新闻在内容上是一致的。两位演员Robert Buckley和Jenny Wade通过Instagram宣布他们已经结婚，并在泰国度蜜月的消息在多个来源中都有报道。例如，Just Jared和Daily Mail的报道与目标新闻内容相吻合，都提到了两位演员在Instagram上公布婚讯的细节。
+
+2. 事实验证：相关新闻来源，包括各大媒体平台和Instagram帖子均提到了他们的结婚消息。这些来源支持了目标新闻中的关键事实，即两人在Instagram上公布结婚消息，并附有蛋糕照片的细节。
+
+3. 用户反馈：从评论来看，用户的态度普遍是高兴和祝福，像是“Surprise! iZombie's Robert Buckley Marries Jenny Wade ❤️❤️❤️”。这与目标新闻的事实一致，没有用户质疑其真实性。
+
+4. 可信度评估：新闻来源如Just Jared和Daily Mail等都是可靠的娱乐新闻来源，并且来自Instagram的直接信息更增加了可信度。
+
+因此，综合考虑，目标新闻是可信的，应该被视为真实的报道。
+2025-01-15 12:24:16 - root - INFO - 处理完成新闻 gossipcop-932577

@@ -1,0 +1,13 @@
+pandas
+torch
+openai
+google-api-python-client
+tqdm
+python-dotenv
+aiohttp
+typing-extensions
+# 可选：数据可视化
+matplotlib
+seaborn
+beautifulsoup4
+lxml  # 更快的HTML解析器
