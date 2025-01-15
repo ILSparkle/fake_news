@@ -28,5 +28,5 @@ politifact
 5. 保存结果
 
 ## 结果
-测试了4条，可见results/batch_0.json  
+测试可见results/batch_i.json  
 具体日志见logs目录
