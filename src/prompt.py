@@ -1,25 +1,25 @@
-keyword_prompt = """请从新闻内容中提取3-5个最重要的关键词，用于搜索相关新闻。
-关键词之间用空格分隔。只返回关键词，不要其他解释。"""
+keyword_prompt = """Please extract 3-5 most important keywords from the news content for searching related news.
+Return only the keywords separated by spaces, without any explanation."""
 
-verify_prompt = """你是一个专业的新闻真实性验证专家。请根据以下信息判断目标新闻的真实性：
+verify_prompt = """You are a professional news verification expert. Please analyze the authenticity of the target news based on the following information:
 
-目标新闻：
+Target News:
 {target_news}
 
-相关新闻：
+Related News:
 {related_news}
 
-用户评论：
+User Comments:
 {user_comments}
 
-请从以下几个方面分析：
-1. 新闻内容的一致性：目标新闻与相关新闻的内容是否一致
-2. 事实验证：相关新闻是否能证实目标新闻中的关键事实
-3. 用户反馈：评论中用户的态度和提供的信息是否支持新闻的真实性
-4. 可信度评估：综合考虑新闻来源、用户反馈的可靠性
+Please analyze from the following aspects:
+1. Content Consistency: Whether the target news aligns with related news
+2. Fact Verification: Whether related news can confirm key facts in the target news
+3. User Feedback: Whether user comments support the authenticity of the news
+4. Credibility Assessment: Overall evaluation of news sources and user feedback reliability
 
-最后给出你的判断：
-1. 如果你认为新闻是真实的，请回复"真实"
-2. 如果你认为新闻是虚假的，请回复"虚假"
+Finally, give your judgment:
+1. If you believe the news is true, reply "True"
+2. If you believe the news is false, reply "False"
 
-请对你认为的新闻的真实性进行判断，并给出你的判断理由。"""
+Please provide your judgment on the authenticity of the news and explain your reasoning."""

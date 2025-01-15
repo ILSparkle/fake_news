@@ -22,18 +22,20 @@ class CommentItem:
     user_desc: str
 
 class FakeNewsDataset(Dataset):
-    def __init__(self, news_path: str | Path, comment_path: str | Path):
+    def __init__(self, news_path: str | Path, comment_path: str | Path, max_comments: int = 10):
         """初始化假新闻数据集
 
         Args:
             news_path: 新闻数据CSV文件路径
             comment_path: 评论数据CSV文件路径
+            max_comments: 每条新闻最多保留的评论数量
         """
         self.news_data: Dict[str, NewsItem] = {}
         self.comment_data: Dict[str, CommentItem] = {}
         self.news_to_comments: Dict[str, list[str]] = {}
         self.news_ids: List[str] = []
         self.comment_sep = "[END_OF_COMMENT]\n"  # 评论之间的分隔符
+        self.max_comments = max_comments
         
         self._load_data(news_path, comment_path)
         
@@ -86,8 +88,11 @@ class FakeNewsDataset(Dataset):
         news_item = self.news_data[news_id]
         comments = self.get_news_comments(news_id)
         
-        comment_texts = []
+        # 限制评论数量
+        if len(comments) > self.max_comments:
+            comments = comments[:self.max_comments]
         
+        comment_texts = []
         for comment in comments:
             comment_texts.append(comment.text)
         

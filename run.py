@@ -98,9 +98,9 @@ async def process_content(news_id: str, content: str, comments: str, label: int,
     )
     
     # 判断模型预测结果
-    if "真实" in verification_result:
+    if "True" in verification_result:
         prediction = 0  # 预测为真
-    elif "虚假" in verification_result:
+    elif "False" in verification_result:
         prediction = 1  # 预测为假
     else:
         prediction = -1  # 无法判断
@@ -123,7 +123,7 @@ async def process_content(news_id: str, content: str, comments: str, label: int,
         'is_correct': is_correct
     }
 
-async def main():
+async def main(dataset: str):
     args = parse_args()
     setup_logging(args.log_level)
     
@@ -133,8 +133,9 @@ async def main():
     
     logging.info("开始加载数据集")
     dataset = FakeNewsDataset(
-        news_path="dataset/gossipcop_news.csv",
-        comment_path="dataset/gossipcop_socialcontext.csv"
+        news_path=f"dataset/{dataset}_news.csv",
+        comment_path=f"dataset/{dataset}_socialcontext.csv",
+        max_comments=10  # 可以根据需要调整
     )
     logging.info(f"数据集大小: {len(dataset)}")
 
@@ -227,4 +228,5 @@ async def main():
             break
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    dataset = "politifact"
+    asyncio.run(main(dataset))
