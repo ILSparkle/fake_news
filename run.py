@@ -5,6 +5,7 @@ from pathlib import Path
 import logging
 import argparse
 from datetime import datetime
+import os
 
 load_dotenv()
 from torch.utils.data import DataLoader
@@ -86,15 +87,29 @@ async def process_content(news_id: str, content: str, comments: str, label: int,
     
     # 验证新闻真实性
     verification_result = await chat_api.chat(
-        "",  # 实际内容通过format传入
+        "",
         verify_prompt.format(
             target_news=content,
             related_news=related_news_text,
-            user_comments=comments  # 添加用户评论
+            user_comments=comments
         ),
         stream=False
     )
-    logging.info(f"真实性判断结果: {verification_result}")
+    
+    # 判断模型预测结果
+    if "真实" in verification_result:
+        prediction = 0  # 预测为真
+    elif "虚假" in verification_result:
+        prediction = 1  # 预测为假
+    else:
+        prediction = -1  # 无法判断
+        
+    # 判断是否正确
+    is_correct = prediction == label
+    
+    logging.info(f"新闻 {news_id} - 实际标签: {'真实' if label == 0 else '虚假'}, "
+                f"预测结果: {'真实' if prediction == 0 else '虚假' if prediction == 1 else '无法判断'}, "
+                f"预测{'正确' if is_correct else '错误'}")
     
     return {
         'news_id': str(news_id),
@@ -102,26 +117,29 @@ async def process_content(news_id: str, content: str, comments: str, label: int,
         'keywords': keywords,
         'search_results': processed_results,
         'comments': comments,
-        'verification': verification_result
+        'verification': verification_result,
+        'prediction': prediction,
+        'is_correct': is_correct
     }
 
 async def main():
     args = parse_args()
     setup_logging(args.log_level)
     
+    # 从环境变量获取并发数
+    max_workers = int(os.getenv("MAX_WORKERS", "3"))
+    logging.info(f"设置最大并发数: {max_workers}")
+    
     logging.info("开始加载数据集")
-    # 创建数据集实例
     dataset = FakeNewsDataset(
         news_path="dataset/gossipcop_news.csv",
         comment_path="dataset/gossipcop_socialcontext.csv"
     )
     logging.info(f"数据集大小: {len(dataset)}")
-    sample = dataset[0]
-    logging.info(f"新闻标题: {sample['news_title']}")
 
     dataloader = DataLoader(
         dataset,
-        batch_size=4,
+        batch_size=32,
         shuffle=True,
         num_workers=4
     )
@@ -135,26 +153,58 @@ async def main():
     
     for batch_idx, batch in enumerate(dataloader):
         batch_results = []
-        for news_id, content, comments, label in zip(batch['news_id'], 
-                                                   batch['news_content'],
-                                                   batch['comments_text'],
-                                                   batch['news_label']):
-            try:
-                news_id = news_id
-                content = content
-                comments = comments
-                label = label.item()
-                
-                result = await process_content(news_id, content, comments, label, 
-                                            search_api, chat_api, crawler)
+        batch_correct = 0
+        batch_total = 0
+        
+        # 准备批次数据
+        batch_data = [
+            (news_id, content, comments, label.item())
+            for news_id, content, comments, label 
+            in zip(batch['news_id'], batch['news_content'], 
+                  batch['comments_text'], batch['news_label'])
+        ]
+        
+        # 使用信号量限制并发数
+        sem = asyncio.Semaphore(max_workers)
+        
+        async def process_with_semaphore(item_data):
+            async with sem:
+                news_id, content, comments, label = item_data
+                try:
+                    return await process_content(
+                        news_id, content, comments, label,
+                        search_api, chat_api, crawler
+                    )
+                except Exception as e:
+                    logging.error(f"处理新闻 {news_id} 时出错: {str(e)}")
+                    return None
+        
+        # 并发处理所有数据
+        tasks = [process_with_semaphore(item) for item in batch_data]
+        results = await asyncio.gather(*tasks)
+        
+        # 处理结果
+        for result in results:
+            if result is not None:
                 batch_results.append(result)
-                logging.info(f"处理完成新闻 {news_id}")
-            except Exception as e:
-                logging.error(f"处理新闻 {news_id} 时出错: {str(e)}")
+                batch_total += 1
+                if result['is_correct']:
+                    batch_correct += 1
+
+        # 计算并输出批次准确率
+        batch_accuracy = batch_correct / batch_total if batch_total > 0 else 0
+        logging.info(f"批次 {batch_idx} 处理完成 - 准确率: {batch_accuracy:.2%} ({batch_correct}/{batch_total})")
 
         # 保存批次结果
         with open(results_dir / f"batch_{batch_idx}.json", 'w', encoding='utf-8') as f:
-            json.dump(batch_results, f, ensure_ascii=False, indent=2)
+            json.dump({
+                'results': batch_results,
+                'statistics': {
+                    'total': batch_total,
+                    'correct': batch_correct,
+                    'accuracy': batch_accuracy
+                }
+            }, f, ensure_ascii=False, indent=2)
         break
 
 if __name__ == "__main__":

@@ -33,7 +33,7 @@ class FakeNewsDataset(Dataset):
         self.comment_data: Dict[str, CommentItem] = {}
         self.news_to_comments: Dict[str, list[str]] = {}
         self.news_ids: List[str] = []
-        self.comment_sep = " [SEP] "  # 评论之间的分隔符
+        self.comment_sep = "[END_OF_COMMENT]\n"  # 评论之间的分隔符
         
         self._load_data(news_path, comment_path)
         
