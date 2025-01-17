@@ -1,3 +1,4 @@
+import re
 from dotenv import load_dotenv
 import asyncio
 import json
@@ -14,7 +15,7 @@ from src.dataset import FakeNewsDataset
 from src.search import SearchAPI
 from src.chat import ChatAPI
 from src.crawler import WebCrawler
-from src.prompt import keyword_prompt, verify_prompt
+from src.prompt import keyword_prompt, verify_prompt, initial_score_prompt
 
 def setup_logging(level: str, log_dir: str = 'logs') -> None:
     """配置日志级别和输出
@@ -69,41 +70,76 @@ def parse_args():
 
 
 async def process_content(news_id: str, content: str, comments: str, label: int, search_api: SearchAPI, chat_api: ChatAPI, crawler: WebCrawler):
-    # 获取关键词
-    keywords = await chat_api.chat(content, keyword_prompt)
-    logging.info(f"提取的关键词: {keywords}")
-    
-    # 搜索相关新闻
-    search_results = await search_api.search(keywords)
-    logging.info(f"找到 {len(search_results)} 条相关新闻")
-    
-    # 获取网页内容
-    processed_results = await crawler.process_search_results(search_results)
-    
-    # 构建相关新闻文本
-    related_news_text = "\n\n".join([
-        f"来源: {result['url']}\n标题: {result['title']}\n内容: {result['content']}"
-        for result in processed_results
-    ])
-    
-    # 验证新闻真实性
-    verification_result = await chat_api.chat(
+    # 首先进行初始评分
+    initial_response = await chat_api.chat(
         "",
-        verify_prompt.format(
-            target_news=content,
-            related_news=related_news_text,
+        initial_score_prompt.format(
+            news_content=content,
             user_comments=comments
-        ),
-        stream=False
+        )
     )
     
-    # 判断模型预测结果
-    if "True" in verification_result:
-        prediction = 0  # 预测为真
-    elif "False" in verification_result:
-        prediction = 1  # 预测为假
+    try:
+        score = -1
+        for line in initial_response.split('\n'):
+            if line.startswith('Final Score:'):
+                score = int(re.search(r'\d+', line).group())
+                break
+                
+        if score == -1:
+            raise ValueError("未找到评分")
+            
+    except Exception as e:
+        logging.error(f"解析评分结果出错: {str(e)}\n响应内容: {initial_response}")
+        score = -1
+        
+    logging.info(f"新闻 {news_id} 初始评分: {score}")
+    
+    # 如果评分在中等范围(2-4分)，则进行进一步验证
+    if 2 <= score <= 4:
+        logging.info(f"新闻 {news_id} 需要进一步验证")
+        
+        # 获取关键词
+        keywords = await chat_api.chat(content, keyword_prompt)
+        logging.info(f"提取的关键词: {keywords}")
+        
+        # 搜索相关新闻
+        search_results = await search_api.search(keywords)
+        logging.info(f"找到 {len(search_results)} 条相关新闻")
+        
+        # 获取网页内容
+        processed_results = await crawler.process_search_results(search_results)
+        
+        # 构建相关新闻文本
+        related_news_text = "\n\n".join([
+            f"来源: {result['url']}\n标题: {result['title']}\n内容: {result['content']}"
+            for result in processed_results
+        ])
+        
+        # 验证新闻真实性
+        verification_result = await chat_api.chat(
+            "",
+            verify_prompt.format(
+                target_news=content,
+                initial_result=initial_response,
+                related_news=related_news_text
+            ),
+            stream=False
+        )
+        
+        # 根据验证结果确定最终预测
+        if "True" in verification_result:
+            prediction = 0  # 预测为真
+        elif "False" in verification_result:
+            prediction = 1  # 预测为假
+        else:
+            prediction = -1  # 无法判断
     else:
-        prediction = -1  # 无法判断
+        # 根据初始评分直接判断
+        prediction = 1 if score < 2.5 else 0  # 2.5分为分界线
+        processed_results = []
+        verification_result = f"基于初始评分 {score} 直接判断"
+        keywords = ""
         
     # 判断是否正确
     is_correct = prediction == label
@@ -115,9 +151,9 @@ async def process_content(news_id: str, content: str, comments: str, label: int,
     return {
         'news_id': str(news_id),
         'actual_label': int(label),
+        'initial_score': score,
         'keywords': keywords,
         'search_results': processed_results,
-        'comments': comments,
         'verification': verification_result,
         'prediction': prediction,
         'is_correct': is_correct
