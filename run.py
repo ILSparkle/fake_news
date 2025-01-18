@@ -267,8 +267,9 @@ async def main(dataset_name: str):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     
-    # 训练模型
-    await train_model("bert-base-uncased", train_loader, test_loader)
+    # 从os.environ中决定是否训练模型
+    if os.environ.get("TRAIN_MODEL", "true") == "true":
+        await train_model("bert-base-uncased", train_loader, test_loader)
     
     # 加载最佳模型进行测试
     system = NewsVerificationSystem("best_model")
