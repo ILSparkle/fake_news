@@ -263,7 +263,7 @@ async def main(dataset_name: str):
     )
     
     # 从os.environ中获取batch_size
-    batch_size = os.environ.get("BATCH_SIZE", 32)
+    batch_size = int(os.environ.get("BATCH_SIZE", 32))
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size)
     
