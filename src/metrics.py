@@ -43,17 +43,8 @@ class MetricsCalculator:
                 'news_id': result['news_id'],
                 'actual_label': '真实' if actual_label == 0 else '虚假',
                 'predicted_label': '真实' if prediction == 0 else '虚假',
-                'news_content': result.get('news_content', ''),
-                'keywords': result['keywords'],
-                'verification_result': result['verification'],
-                'search_results': [
-                    {
-                        'title': r['title'],
-                        'url': r['url'],
-                        'snippet': r['snippet']
-                    } for r in result['search_results']
-                ],
-                'comments': result['comments']
+                'confidence': result['confidence'],
+                'is_retrieved': result.get('is_retrieved', False)
             }
             self.error_predictions.append(error_info)
         
