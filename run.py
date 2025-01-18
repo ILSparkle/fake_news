@@ -83,7 +83,7 @@ class NewsVerificationSystem:
             confidence_threshold: 置信度阈值，低于此值将触发检索增强
         """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.tokenizer = BertTokenizer.from_pretrained(model_name)
+        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         self.model = DualBertForSequenceClassification.from_pretrained(model_name)
         self.model.to(self.device)
         self.confidence_threshold = confidence_threshold
