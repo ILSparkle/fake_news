@@ -18,7 +18,7 @@ from tqdm import tqdm
 load_dotenv()
 from src.dataset import FakeNewsDataset
 from src.search import SearchAPI
-from src.chat import ChatAPI,
+from src.chat import ChatAPI
 from src.crawler import WebCrawler
 from src.prompt import keyword_prompt, verify_prompt, initial_score_prompt
 
