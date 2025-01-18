@@ -8,3 +8,5 @@ aiohttp
 typing-extensions
 beautifulsoup4
 lxml
+transformers
+numpy
