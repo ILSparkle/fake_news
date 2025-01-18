@@ -69,7 +69,7 @@ def parse_args():
         '--log-dir',
         type=str,
         default='logs',
-        help='日志文件保存目录'(,
+        help='日志文件保存目录'
     )
     return parser.parse_args()
 
