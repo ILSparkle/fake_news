@@ -33,7 +33,7 @@ class FakeNewsDataset(Dataset):
         self.max_comments = max_comments
         
         # 初始化tokenizer
-        self.tokenizer = BertTokenizer.from_pretrained(tokenizer_path)
+        self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         
         self._load_data(news_path, comment_path)
         
