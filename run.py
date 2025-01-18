@@ -17,7 +17,7 @@ from tqdm import tqdm
 from typing import Dict
 
 load_dotenv()
-from src.dataset import FakeNewsDataset
+from dataset import FakeNewsDataset
 from src.search import SearchAPI
 from src.chat import ChatAPI
 from src.crawler import WebCrawler
