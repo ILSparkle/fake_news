@@ -262,8 +262,10 @@ async def main(dataset_name: str):
         generator=torch.Generator().manual_seed(42)
     )
     
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=32)
+    # 从os.environ中获取batch_size
+    batch_size = os.environ.get("BATCH_SIZE", 32)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size)
     
     # 训练模型
     await train_model("bert-base-uncased", train_loader, test_loader)
