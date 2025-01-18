@@ -14,6 +14,7 @@ from transformers import BertTokenizer
 from model import DualBertForSequenceClassification
 import numpy as np
 from tqdm import tqdm
+from typing import Dict
 
 load_dotenv()
 from src.dataset import FakeNewsDataset
