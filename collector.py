@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 load_dotenv()
 import asyncio
@@ -138,11 +139,15 @@ class NewsCollector:
             logging.error(f"保存结果时出错: {str(e)}")
 
 async def main():
+    # 从environ中读取
+    news_path = os.getenv("NEWS_PATH")
+    comment_path = os.getenv("COMMENT_PATH")
+    output_path = os.getenv("OUTPUT_PATH")
     """主函数"""
     collector = NewsCollector(
-        news_path="dataset/politifact_news.csv",
-        comment_path="dataset/politifact_socialcontext.csv", 
-        output_path="dataset/politifact_search_results.json"
+        news_path=news_path,
+        comment_path=comment_path, 
+        output_path=output_path
     )
     await collector.collect_all_news()
 
