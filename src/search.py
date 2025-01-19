@@ -11,6 +11,18 @@ class SearchAPI:
         self.base_url: str = "google.serper.dev"
         self.top_k: int = int(os.getenv("GOOGLE_TOP_K", "10"))
         
+        # 添加过滤规则
+        self.excluded_sites = [
+            'youtube.com',
+            'vimeo.com',
+            'bilibili.com',
+            'dailymotion.com',
+            'youku.com',
+            'academia.edu',  # 学术网站，通常有PDF
+            'researchgate.net',
+            'scribd.com',
+        ]
+        
         if not self.api_key:
             print("警告: 未找到SERPER_API_KEY环境变量")
         
@@ -41,12 +53,16 @@ class SearchAPI:
             raise ValueError("请先调用 configure() 配置 API 密钥")
 
         try:
+            # 添加过滤条件到查询
+            excluded_sites = ' '.join([f'-site:{site}' for site in self.excluded_sites])
+            filtered_query = f"{query} {excluded_sites} -filetype:pdf"
+            
             # 创建HTTPS连接
             conn = http.client.HTTPSConnection(self.base_url)
             
             # 准备请求数据
             payload = json.dumps({
-                "q": query,
+                "q": filtered_query,
                 "num": self.top_k
             })
             
