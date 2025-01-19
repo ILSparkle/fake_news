@@ -180,10 +180,15 @@ class NewsCollector:
 
 async def main():
     """主函数"""
+    # 从.env文件中获取参数
+    news_path = os.getenv("NEWS_PATH")
+    comment_path = os.getenv("COMMENT_PATH")
+    output_path = os.getenv("OUTPUT_PATH")
+    
     collector = NewsCollector(
-        news_path="dataset/politifact_news.csv",
-        comment_path="dataset/politifact_socialcontext.csv", 
-        output_path="dataset/politifact_search_results.json"
+        news_path=news_path,
+        comment_path=comment_path, 
+        output_path=output_path
     )
     await collector.collect_all_news()
 
